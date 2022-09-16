@@ -1,0 +1,12 @@
+spiegel,isaac
+nguyen,ashley
+amaral,ben
+zucker,jesse
+jones,spencer
+harlow,michael
+weis,ben
+spiegel,daniel
+spiegel,zani
+spiegel,carole
+mock,tim
+nguyen,fuji
