@@ -1,11 +1,15 @@
 #!/bin/sh
 # address book 
-# version 0
 # isaac spiegel
 
 LOG="./address_book.txt"
 
-# read_log()
+# -----------------------------------------------------------------
+# READ_LOG
+# 
+# converts a contact stored in the address_book.txt file from
+# 'last,first' to 'first last'.
+# -----------------------------------------------------------------
 read_log()
 {
 	READ_FIRST=`echo $1 | cut -d',' -f2`
@@ -13,14 +17,23 @@ read_log()
 	READ_OUT="$READ_FIRST $READ_LAST"
 }
 
-# add()
+# -----------------------------------------------------------------
+# ADD
+# 
+# prompts the user for a first and last name then adds the contact
+# to the specified address book txt file
+# -----------------------------------------------------------------
 add()
 {
 	echo "${LAST},${FIRST}" >> address_book.txt
 	read -p "Contact added! (ENTER to continue)"
 }
 
-# view 
+# -----------------------------------------------------------------
+# VIEW
+#
+# echos every contact from the address book to the terminal
+# -----------------------------------------------------------------
 view()
 {
 	echo "ALL CONTACTS"
@@ -31,7 +44,12 @@ view()
 	done < $LOG
 }
 
-# search()
+# -----------------------------------------------------------------
+# SEARCH
+# 
+# searches for a given contact in the address book and prints any
+# matches found
+# -----------------------------------------------------------------
 search()
 {
 	while read -r line
@@ -41,7 +59,11 @@ search()
 	done < $LOG
 }
 
-# delete()
+# -----------------------------------------------------------------
+# DELETE
+# 
+# deletes a user-specified contact from the list
+# -----------------------------------------------------------------
 delete()
 {
 	declare -a MATCHES
@@ -64,15 +86,20 @@ delete()
 
 	echo "Enter the index of the contact to be deleted:"
 	read INPUT_STRING
-	# TODO: INPUT VALIDATION
+	
+	while [ $INPUT_STRING -gt `expr ${#MATCHES[@]} - 1` ]
+	do
+		echo "Index out of range, try again:"
+		read INPUT_STRING
+	done
+
 	echo "Really delete ${MATCHES[$INPUT_STRING]}? (y/n)"
 	read CONFIRM
-	# TODO: INPUT VALIDATION
 	case $CONFIRM in
 		y)
 			echo "${MATCHES[$INPUT_STRING]} deleted."
-			sed -i '.txt' '/${MATCHES[$INPUT_STRING]}/d' $LOG
-			# TODO: NEED TO SAVE
+			TO_DEL=${MATCHES[$INPUT_STRING]}
+			sed -i '' -e "/$TO_DEL/d" $LOG
 			;;
 		n)
 			echo "cancelling..."
@@ -83,7 +110,12 @@ delete()
 	esac
 }
 
-
+# -----------------------------------------------------------------
+# MAIN
+# 
+# the driver function for the address book, manages the 
+# main menu. Takes in user input and calls the relevant function
+# ----------------------------------------------------------------- 
 main()
 {
 	echo "Welcome to your address book!"
@@ -147,13 +179,8 @@ main()
 }
 
 
-
-# remove()
-
-# edit()
-
-
 #################################
 #### MAIN SCRIPT STARTS HERE ####
 #################################
+# CHECK THE LOG FILEPATH AT THE TOP OF THE SCRIPT
 main
